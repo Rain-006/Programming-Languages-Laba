@@ -15,3 +15,55 @@ phoneRuButton.addEventListener('click', () => {
         phoneRuResult.style.color = 'red';
     }
 });
+
+
+
+
+
+
+// TAB SLIDER LOGIC
+const tabItems = document.querySelectorAll('.tab_content_item');
+const tabBlocks = document.querySelectorAll('.tab_content_block');
+
+let currentIndex = 0;
+let autoSlider;
+
+// Функция переключения таба
+function showTab(index) {
+    // Убираем активность у всех
+    tabItems.forEach((item, i) => {
+        item.classList.toggle('tab_content_item_active', i === index);
+    });
+    tabBlocks.forEach((block, i) => {
+        block.classList.toggle('active', i === index);
+    });
+
+    currentIndex = index;
+}
+
+// Клик по табам
+tabItems.forEach((item, index) => {
+    item.addEventListener('click', () => {
+        showTab(index);
+        resetAutoSlider(); // Сбрасываем таймер при клике
+    });
+});
+
+// Автослайдер
+function startAutoSlider() {
+    autoSlider = setInterval(() => {
+        currentIndex = (currentIndex + 1) % tabBlocks.length;
+        showTab(currentIndex);
+    }, 3000); // каждые 3 секунды
+}
+
+function resetAutoSlider() {
+    clearInterval(autoSlider);
+    startAutoSlider();
+}
+
+// Запуск автослайдера при загрузке
+document.addEventListener('DOMContentLoaded', () => {
+    showTab(0); // Показать первый таб
+    startAutoSlider();
+});
