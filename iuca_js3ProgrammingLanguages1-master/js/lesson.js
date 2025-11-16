@@ -67,3 +67,87 @@ document.addEventListener('DOMContentLoaded', () => {
     showTab(0); // Показать первый таб
     startAutoSlider();
 });
+
+
+
+
+
+
+
+
+
+
+
+// === КУРСЫ (1 единица = сколько сомов) ===
+    const rates = {
+        KGS: 1,
+        USD: 85.5,
+        EUR: 95.2
+    };
+
+    const inputs = {
+        som: document.getElementById('som'),
+        usd: document.getElementById('usd'),
+        eur: document.getElementById('eur')
+    };
+
+    let updating = false;
+
+    // === Конвертация ===
+    function convert(from, value) {
+        if (updating) return;
+        updating = true;
+
+        const amount = parseFloat(value) || 0;
+        const inKGS = amount * rates[from];
+
+        if (from !== 'KGS') inputs.som.value = inKGS.toFixed(2);
+        if (from !== 'USD') inputs.usd.value = (inKGS / rates.USD).toFixed(2);
+        if (from !== 'EUR') inputs.eur.value = (inKGS / rates.EUR).toFixed(2);
+
+        updating = false;
+    }
+
+    // === Запрет на отрицательные числа ===
+    function blockNegative(input) {
+        input.addEventListener('input', function() {
+            // Убираем всё, что не цифра, точка или минус
+            let value = this.value;
+
+            // Если начинается с минуса — очищаем
+            if (value.startsWith('-')) {
+                this.value = '';
+                return;
+            }
+
+            // Разрешаем только числа и одну точку
+            const clean = value.replace(/[^0-9.]/g, '');
+            const parts = clean.split('.');
+            if (parts.length > 2) {
+                this.value = parts[0] + '.' + parts.slice(1).join('');
+            } else {
+                this.value = clean;
+            }
+        });
+
+        // Дополнительно: блокируем вставку минуса через Ctrl+V
+        input.addEventListener('paste', function(e) {
+            const pasted = (e.clipboardData || window.clipboardData).getData('text');
+            if (pasted.includes('-')) {
+                e.preventDefault();
+            }
+        });
+    }
+
+    // Применяем к каждому полю
+    Object.values(inputs).forEach(blockNegative);
+
+    // === Слушаем ввод ===
+    inputs.som.addEventListener('input', () => convert('KGS', inputs.som.value));
+    inputs.usd.addEventListener('input', () => convert('USD', inputs.usd.value));
+    inputs.eur.addEventListener('input', () => convert('EUR', inputs.eur.value));
+
+    // Выделение при клике
+    Object.values(inputs).forEach(input => {
+        input.addEventListener('focus', () => input.select());
+    });

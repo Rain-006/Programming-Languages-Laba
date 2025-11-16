@@ -258,3 +258,8 @@ window.onload = function () {
     loop();
     setInterval(loop, 1000 / 60);
 };
+
+
+
+let fruits = ["яблоко", "банан", "киви"]
+console.log(fruits[1]);
