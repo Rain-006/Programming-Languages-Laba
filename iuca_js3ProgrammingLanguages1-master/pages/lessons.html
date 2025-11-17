@@ -126,27 +126,35 @@
         <div class="container">
             <h3>Card Switcher</h3>
             <div class="inner_card_switcher">
-                <button class="btn" id="btn-prev">prev</button>
-                <div class="card"></div>
-                <button class="btn" id="btn-next">next</button>
+                <button class="btn" id="btn-prev">← Prev</button>
+                
+                <div class="card">
+                    <div class="card-title">Карточка 1</div>
+                    <div class="card-text">Привет! Это первая карточка в нашем слайдере.</div>
+                </div>
+
+                <button class="btn" id="btn-next">Next →</button>
             </div>
         </div>
     </div>
 
-    <div class="weather">
+<div class="weather">
         <div class="container">
             <div class="inner_weather">
-                <div>
+                <div class="search-container">
                     <input type="text" class="cityName" placeholder="Найти погоду в...">
+                    <button class="search-btn">🔍</button>
                 </div>
+                <div class="error">Город не найден :(</div>
                 <div>
-                    <span class="city"></span>
+                    <span class="city">Бишкек</span>
                     <hr>
-                    <span class="temp"></span>
+                    <span class="temp">+7°C</span>
+                    <div class="description">ясно</div>
                 </div>
             </div>
         </div>
-    </div>
+</div>
 
     <div class="footer">
         <div class="container">

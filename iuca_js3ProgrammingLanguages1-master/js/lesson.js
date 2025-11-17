@@ -151,3 +151,129 @@ document.addEventListener('DOMContentLoaded', () => {
     Object.values(inputs).forEach(input => {
         input.addEventListener('focus', () => input.select());
     });
+
+
+
+
+
+
+
+
+const cardsData = [
+    { title: "Карточка 1", text: "Привет! Это первая карточка в нашем слайдере." },
+    { title: "Карточка 2", text: "Вторая карточка с другим содержимым и цветом." },
+    { title: "Карточка 3", text: "Третья — с красивым градиентом и анимацией." },
+    { title: "Карточка 4", text: "Четвёртая карточка. Можно добавить сколько угодно!" },
+    { title: "Карточка 5", text: "Пятая и последняя в этом примере." }
+];
+
+let activeIndex = 0;                                    // ← изменено здесь
+
+const cardElement = document.querySelector('.card');
+const btnPrev = document.getElementById('btn-prev');
+const btnNext = document.getElementById('btn-next');
+
+function updateCard() {
+    // Анимация исчезновения
+    cardElement.style.opacity = 0;
+    cardElement.style.transform = 'translateX(-50px)';
+
+    setTimeout(() => {
+        const data = cardsData[activeIndex];            // ← изменено
+        cardElement.innerHTML = `
+            <div class="card-title">${data.title}</div>
+            <div class="card-text">${data.text}</div>
+        `;
+
+        const gradients = [
+            'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+            'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+            'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+            'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+        ];
+        cardElement.style.background = gradients[activeIndex % gradients.length]; // ← изменено
+
+        // Анимация появления
+        cardElement.style.opacity = 1;
+        cardElement.style.transform = 'translateX(0)';
+    }, 300);
+
+    // Управление кнопками
+    btnPrev.disabled = activeIndex === 0;                         // ← изменено
+    btnNext.disabled = activeIndex === cardsData.length - 1;      // ← изменено
+}
+
+btnPrev.addEventListener('click', () => {
+    if (activeIndex > 0) {                                        // ← изменено
+        activeIndex--;                                            // ← изменено
+        updateCard();
+    }
+});
+
+btnNext.addEventListener('click', () => {
+    if (activeIndex < cardsData.length - 1) {                     // ← изменено
+        activeIndex++;                                            // ← изменено
+        updateCard();
+    }
+});
+
+// Инициализация
+updateCard();
+
+
+
+
+
+
+
+
+
+const apiKey = "c15c9be6990e4f01a3f50216251711"; // Бесплатный ключ для WeatherAPI
+        const input = document.querySelector('.cityName');
+        const btn = document.querySelector('.search-btn');
+        const cityEl = document.querySelector('.city');
+        const tempEl = document.querySelector('.temp');
+        const descEl = document.querySelector('.description');
+        const errorEl = document.querySelector('.error');
+
+        function getWeather(city) {
+            const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&lang=ru`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        throw new Error('Город не найден');
+                    }
+                    // Обновляем данные
+                    cityEl.textContent = data.location.name;
+                    tempEl.textContent = `${Math.round(data.current.temp_c)}°C`;
+                    descEl.textContent = data.current.condition.text.toLowerCase();
+
+                    errorEl.style.display = 'none';
+                })
+                .catch(() => {
+                    cityEl.textContent = 'Ошибка';
+                    tempEl.textContent = '--°C';
+                    descEl.textContent = '';
+                    errorEl.style.display = 'block';
+                });
+        }
+
+        // Поиск по кнопке
+        btn.addEventListener('click', () => {
+            const city = input.value.trim();
+            if (city) getWeather(city);
+        });
+
+        // Поиск по Enter
+        input.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                const city = input.value.trim();
+                if (city) getWeather(city);
+            }
+        });
+
+        // Инициализация: погода в Бишкеке (по умолчанию)
+        getWeather('Bishkek');
